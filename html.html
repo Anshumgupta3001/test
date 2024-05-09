@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <form action="/save" method="post" id="registrationForm">
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" pattern="[A-Za-z]+" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" pattern="[A-Za-z]+" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <select id="country" name="country"></select>
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city">
+        </div>
+        <div class="form-group">
+            <label>Gender:</label>
+            <input type="radio" id="male" name="gender" value="male" required>
+            <label for="male">Male</label>
+            <input type="radio" id="female" name="gender" value="female">
+            <label for="female">Female</label>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+        </div>
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" readonly>
+        </div>
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+        window.onload = function() {
+            
+            function fetchCountries() {
+                fetch('your-api-endpoint')
+                    .then(response => response.json())
+                    .then(data => {
+                        const countrySelect = document.getElementById('country');
+                        data.forEach(country => {
+                            var option = document.createElement('option');
+                            option.value = country.code; 
+                            option.textContent = country.name; 
+                            countrySelect.appendChild(option); 
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching country data:', error);
+                    });
+            }
+            
+            fetchCountries();
+
+            const dobInput = document.getElementById('dob');
+            const ageInput = document.getElementById('age');
+
+            dobInput.addEventListener('change', function() {
+                const dob = new Date(this.value);
+                const today = new Date();
+                const age = today.getFullYear() - dob.getFullYear();
+
+                if (age >= 14 && age <= 99) {
+                    ageInput.value = age;
+                } else {
+                    alert('Age must be between 14 and 99.');
+                    this.value = '';
+                    ageInput.value = '';
+                }
+            });
+        };
+    </script>
+</body>
+</html>
